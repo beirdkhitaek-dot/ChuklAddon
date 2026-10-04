@@ -1,5 +1,3 @@
-rootProject.name = 'chukl-addon'
-
 pluginManagement {
     repositories {
         maven {
