@@ -1,14 +1,16 @@
-name: Build Addon
+name: Build and Release
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    tags:
+      - 'v*' # Triggers whenever you push a tag starting with 'v' (e.g., v1.0.0)
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to create a release and upload assets
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,9 +28,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+      - name: Release and Upload Jar
+        uses: softprops/action-gh-release@v2
         with:
-          name: chukl-addon-jar
-          path: build/libs/*.jar
+          files: build/libs/*-all.jar
+          # If your build outputs a standard dev/jar file instead of a shadow/all jar, use:
+          # files: build/libs/*.jar
+          generate_release_notes: true
           
