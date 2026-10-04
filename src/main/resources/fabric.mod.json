@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "chukl-addon",
+  "version": "${version}",
+  "name": "Chukl Addon",
+  "description": "Custom Meteor Client addon featuring Deep Block Entity ESP and Dug Out Highlighter.",
+  "authors": [
+    "Chukl"
+  ],
+  "contact": {
+    "sources": "https://github.com/yourusername/chukl-addon"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "com.chukl.addon.ChuklAddon"
+    ]
+  },
+  "mixins": [
+    "chukl-addon.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21",
+    "java": ">=21",
+    "meteor-client": "*"
+  }
+}
