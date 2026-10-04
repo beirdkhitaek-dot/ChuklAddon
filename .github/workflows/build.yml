@@ -22,9 +22,9 @@ jobs:
 
       - name: Generate Gradle Wrapper
         run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.8-bin.zip
-          unzip -q gradle-8.8-bin.zip
-          ./gradle-8.8/bin/gradle wrapper
+          wget -q https://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+          unzip -q gradle-8.10.2-bin.zip
+          ./gradle-8.10.2/bin/gradle wrapper
 
       - name: Build with Gradle
         run: ./gradlew build
