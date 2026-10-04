@@ -34,4 +34,3 @@ jobs:
         with:
           name: chukl-addon-jar
           path: build/libs/*.jar
-          
