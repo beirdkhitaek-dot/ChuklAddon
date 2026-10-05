@@ -6,6 +6,8 @@ import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.ColorSetting;
+import meteordevelopment.meteorclient.settings.DoubleSetting;
+import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.IntSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
@@ -138,19 +140,44 @@ public class SusChunkFinder extends Module {
 
     // --- Render ---
 
-    private final Setting<SettingColor> chunkColor = sgRender.add(new ColorSetting.Builder()
-        .name("chunk-color")
+    private final Setting<ShapeMode> chunkShapeMode = sgRender.add(new EnumSetting.Builder<ShapeMode>()
+        .name("chunk-shape-mode")
+        .description("How sus chunks are drawn. Sides = filled flat square, Lines = outline only, Both = filled with outline.")
+        .defaultValue(ShapeMode.Sides)
+        .build()
+    );
+
+    private final Setting<SettingColor> chunkSideColor = sgRender.add(new ColorSetting.Builder()
+        .name("chunk-fill-color")
+        .description("Fill color of sus chunks.")
+        .defaultValue(new SettingColor(255, 0, 0, 110))
+        .visible(() -> chunkShapeMode.get() != ShapeMode.Lines)
+        .build()
+    );
+
+    private final Setting<SettingColor> chunkLineColor = sgRender.add(new ColorSetting.Builder()
+        .name("chunk-outline-color")
         .description("Outline color of sus chunks.")
-        .defaultValue(new SettingColor(255, 0, 0, 160))
+        .defaultValue(new SettingColor(255, 0, 0, 200))
+        .visible(() -> chunkShapeMode.get() != ShapeMode.Sides)
         .build()
     );
 
     private final Setting<Integer> chunkY = sgRender.add(new IntSetting.Builder()
-        .name("chunk-outline-y")
-        .description("Height the chunk outline is drawn at.")
+        .name("chunk-y")
+        .description("Height the chunk square is drawn at.")
         .defaultValue(63)
         .range(-64, 320)
         .sliderRange(-64, 128)
+        .build()
+    );
+
+    private final Setting<Double> chunkThickness = sgRender.add(new DoubleSetting.Builder()
+        .name("chunk-thickness")
+        .description("Thickness of the chunk box in blocks. Small = flat square, larger = tall column.")
+        .defaultValue(0.1)
+        .range(0.05, 128)
+        .sliderRange(0.05, 16)
         .build()
     );
 
@@ -444,62 +471,4 @@ public class SusChunkFinder extends Module {
 
                             BlockPos pos = new BlockPos(bx, by, bz);
                             boolean buried = true;
-                            for (Direction dir : Direction.values()) {
-                                if (world.getBlockState(other.set(bx, by, bz).offset(dir)).isAir()) {
-                                    buried = false;
-                                    break;
-                                }
-                            }
-                            if (buried) deepslate.add(pos);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (p.folia()) {
-            if (foundBuds) grown++;
-            else if (foundClusters) notGrown++;
-        }
-
-        return new ChunkResult(notGrown, grown > 0, deepslate);
-    }
-
-    @EventHandler
-    private void onRender(Render3DEvent event) {
-        if (mc.world == null || mc.player == null) return;
-
-        Set<ChunkPos> chunks = susChunks;
-        if (!chunks.isEmpty()) {
-            double y = chunkY.get();
-            SettingColor color = chunkColor.get();
-
-            for (ChunkPos cp : chunks) {
-                event.renderer.box(
-                    cp.getStartX(), y, cp.getStartZ(),
-                    cp.getStartX() + 16, y + 0.1, cp.getStartZ() + 16,
-                    color, color, ShapeMode.Lines, 0
-                );
-            }
-        }
-
-        if (rotatedDeepslate.get()) {
-            List<BlockPos> blocks = deepslateBlocks;
-            if (blocks.isEmpty()) return;
-
-            SettingColor color = deepslateColor.get();
-            double maxDistSq = (double) deepslateDistance.get() * deepslateDistance.get();
-            double px = mc.player.getX(), py = mc.player.getY(), pz = mc.player.getZ();
-            int drawn = 0;
-
-            for (BlockPos pos : blocks) {
-                double dx = pos.getX() + 0.5 - px, dy = pos.getY() + 0.5 - py, dz = pos.getZ() + 0.5 - pz;
-                if (dx * dx + dy * dy + dz * dz > maxDistSq) continue;
-
-                event.renderer.box(pos, color, color, ShapeMode.Lines, 0);
-
-                if (++drawn >= 500) break; // keeps weak devices smooth
-            }
-        }
-    }
-}
+                            for (Direct
