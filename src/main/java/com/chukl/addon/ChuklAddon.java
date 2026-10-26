@@ -4,6 +4,7 @@ import com.chukl.addon.modules.DeepBlockEntityEsp;
 import com.chukl.addon.modules.DugOutHighlighter;
 import com.chukl.addon.modules.LightFinder;
 import com.chukl.addon.modules.SusChunkFinder;
+import com.chukl.addon.modules.LightEsp;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.systems.modules.Category;
